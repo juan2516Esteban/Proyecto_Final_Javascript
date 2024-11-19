@@ -1,4 +1,4 @@
-input{
+input {
   width: 350px;
   height: 30px;
   border-radius: 6px;
@@ -11,6 +11,35 @@ input{
   margin: 15px 5px;
 }
 
-label{
+label {
   margin: 0 5px;
+}
+.Container {
+  display: flex;
+  height: 130vh; /* Altura completa de la pantalla */
+  background-color: #fff;
+}
+
+.Izquierda,
+.Derecha {
+  flex: 1; /* Se expande para ocupar la mitad de la pantalla */
+  margin: 8px 8px;
+  border: 5px solid #000;
+}
+
+.Izquierda {
+  padding: 20px 15px;
+  background-color: lightblue;
+}
+
+.Izquierda h1 {
+  text-align: center;
+}
+
+.IzquierdaEscondido {
+  background-color: inherit;
+}
+
+.Derecha {
+  background-color: lightgreen;
 }
