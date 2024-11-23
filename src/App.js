@@ -273,6 +273,45 @@ function App() {
     }
   };
 
+  const CancelarProducto = () => {
+    setShowHeading(false);
+    menuInstance.AgregarCategoria(categoriaIntance); // se agrega la categoria al menu
+    inputCategoria.current.value = ""; // se limpia el input de la categoria
+    setcategoriaIntance(null);
+    resetStyles();
+  };
+
+  const AvanzarProct = (product) => {
+    if (product.productos.length - 1 > product.avanzarProducto) {
+      product.PaginarProductoAvanazar();
+
+      const copyProduct = Object.create(product);
+      Object.assign(copyProduct, product);
+      menuInstance.editarCategoria(copyProduct);
+
+      const copyNMenu = Object.create(menuInstance);
+      Object.assign(copyNMenu, menuInstance);
+
+      setmenuInstance(copyNMenu);
+    }
+  };
+
+  const RetrocederProduct = (product) => {
+    if (product.avanzarProducto !== 0) {
+      product.PaginarProductoRetroceder();
+
+      const copyProduct = Object.create(product);
+      Object.assign(copyProduct, product);
+
+      menuInstance.editarCategoria(copyProduct);
+
+      const copyNMenu = Object.create(menuInstance);
+      Object.assign(copyNMenu, menuInstance);
+
+      setmenuInstance(copyNMenu);
+    }
+  };
+
   return (
     <>
       <div className="Container">
@@ -332,6 +371,7 @@ function App() {
             />
 
             <button
+              className="btn BotonCategoria"
               onClick={() => {
                 // se verifica que los campos sean validos y se esconde el boton si son validos
                 if (
@@ -399,14 +439,25 @@ function App() {
                     }}
                     pattern="(\d{1,3}(\.\d{3})*(,\d{1,2})?|\d+)"
                     onFocus={handleFocusPriceProduct}
+                    maxLength={15}
                   />
 
                   <button
+                    className="btn BotonCategoria"
                     onClick={(event) => {
                       CreateProduct(event);
                     }}
                   >
                     agregar producto
+                  </button>
+
+                  <button
+                    className="btn BotonCategoria"
+                    onClick={() => {
+                      CancelarProducto();
+                    }}
+                  >
+                    Cancelar
                   </button>
                 </div>
               </>
@@ -416,9 +467,10 @@ function App() {
         <div className="Derecha">
           {/* Seccion de la derecha de la pantalla */}
 
-          <h1>{menuInstance ? menuInstance.nombreDelRestaurante : "Titulo"}</h1>
+          <h1>{menuInstance ? menuInstance.nombreDelRestaurante : ""}</h1>
 
-          {/* 
+          <div className="Flex_category">
+            {/* 
               El método `map()` se usa para iterar sobre colecciones. Los parámetros son:
               - `elemento`: el valor actual del array.
               - `index`: la posición del elemento.
@@ -431,32 +483,51 @@ function App() {
               const numerosMultiplicados = numeros.map((numero) => numero * 2);
           */}
 
-          {/* Si el menu no contiene ningun valor se mostrara el sinonimo de categorias
+            {/* Si el menu no contiene ningun valor se mostrara el sinonimo de categorias
           , en caso contrario se recorrera el Array de Categorias y Productos */}
 
-          {menuInstance ? (
-            menuInstance.categoria.map((elementos, categoryIndex) => (
-              <>
-                <h2 key={categoryIndex}>{elementos.nombreCategoria}</h2>
+            {menuInstance
+              ? menuInstance.categoria.map((elementos, categoryIndex) => (
+                  <div className="Category">
+                    <h2 key={categoryIndex}>{elementos.nombreCategoria}</h2>
 
-                {elementos.productos.map((Product, productIndex) => (
-                  <>
-                    <p key={`Name_${productIndex}`}>- {Product.nombre}</p>
-
-                    <p key={`Description_${productIndex}`}>
-                      Descripcion: {Product.descripcion}
-                    </p>
-
-                    <p key={`Price_${productIndex}`}>
-                      Precio: {Product.precio}
-                    </p>
-                  </>
-                ))}
-              </>
-            ))
-          ) : (
-            <h3>Categorias</h3>
-          )}
+                    {elementos.productos.map(
+                      (Product, productIndex) =>
+                        productIndex === elementos.avanzarProducto && (
+                          <div className="Productos">
+                            <p key={`Name_${productIndex}`}>
+                              <ion-icon name="medkit-outline"></ion-icon>{" "}
+                              {Product.nombre}
+                            </p>
+                            <p key={`Description_${productIndex}`}>
+                              <ion-icon name="chatbubble-ellipses-outline"></ion-icon>{" "}
+                              Descripcion: {Product.descripcion}
+                            </p>
+                            <p key={`Price_${productIndex}`}>
+                              <ion-icon name="cash-outline"></ion-icon> Precio:
+                              $ {Product.precio}
+                            </p>
+                            <div className="displayFlex">
+                              <button
+                                className="AvanzarYRetroceder"
+                                onClick={() => AvanzarProct(elementos)}
+                              >
+                                avanzar
+                              </button>
+                              <button
+                                className="AvanzarYRetroceder"
+                                onClick={() => RetrocederProduct(elementos)}
+                              >
+                                retroceder
+                              </button>
+                            </div>
+                          </div>
+                        )
+                    )}
+                  </div>
+                ))
+              : ""}
+          </div>
         </div>
       </div>
     </>

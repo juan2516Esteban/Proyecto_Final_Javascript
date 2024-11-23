@@ -11,6 +11,18 @@ class Menu {
   SetNombreRestaurante(newName) {
     this.nombreDelRestaurante = newName;
   }
+
+  editarCategoria(newCategoria) {
+    this.categoria.forEach((categoria) => {
+      if (categoria.nombreCategoria === newCategoria.nombreCategoria) {
+        categoria.nombreCategoria = newCategoria.nombreCategoria;
+        categoria.productos = newCategoria.productos;
+        categoria.avanzarProducto = newCategoria.avanzarProducto;
+      } else {
+        return;
+      }
+    });
+  }
 }
 
 export default Menu;
